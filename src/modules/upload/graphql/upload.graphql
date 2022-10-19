@@ -1,0 +1,11 @@
+scalar JsonFile
+
+type Query {
+    getMetadataGlobalProd: JSONObject
+    getMetadataGlobalDev: JSONObject
+}
+
+type Mutation {
+    deploymentMetadataProd: Boolean!
+    uploadMetadataDev(file: JsonFile!): String!
+}

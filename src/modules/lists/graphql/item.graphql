@@ -1,0 +1,12 @@
+type Item {
+    id: String
+    webUrl: String!
+    lastModifiedDateTime: String
+    fields: JSONObject!
+}
+
+scalar JSONObject
+
+type Query {
+    getItemsByListId(listId: String!): [Item]!
+}

@@ -1,0 +1,12 @@
+type List {
+   id: String!
+   name: String!
+   description: String
+   webUrl: String
+   displayName: String
+   lastModifiedDateTime: String
+}
+
+type Query {
+    getListBySiteId: [List]!
+}
