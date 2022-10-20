@@ -5,6 +5,7 @@ type List {
    webUrl: String
    displayName: String
    lastModifiedDateTime: String
+   list: JSONObject!
 }
 
 type Query {
