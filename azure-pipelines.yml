@@ -1,0 +1,41 @@
+
+trigger:
+- main
+ 
+stages:
+- stage: build
+  displayName: 'Build'
+  jobs:
+  - job: build
+    displayName: 'Build'
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x'
+      displayName: 'Install Node.js'
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'specific'
+        project: 'dc28bd53-c95a-42b5-b157-2fee5d662909'
+        pipeline: '961'
+        buildVersionToDownload: 'latest'
+        downloadType: 'specific'
+        downloadPath: '$(System.DefaultWorkingDirectory)'
+    - task: ExtractFiles@1
+      inputs:
+        archiveFilePatterns: '**/*.zip'
+        destinationFolder: '$(System.DefaultWorkingDirectory)/public'
+        cleanDestinationFolder: true
+        overwriteExistingFiles: false  
+    - script: |
+        npm install
+      displayName: 'npm install'
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+    - task: PublishPipelineArtifact@0
+      inputs:
+        targetPath: '$(System.ArtifactsDirectory)'
