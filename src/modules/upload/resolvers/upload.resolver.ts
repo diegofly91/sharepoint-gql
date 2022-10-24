@@ -19,6 +19,11 @@ export class UploadResolver {
         return await this.uploadService.getMetadataGlobalDev();
     }
 
+    @Mutation()
+    async uploadMetadataJsonDev(@Args('data') data: []): Promise<string> {
+        return await this.uploadService.uploadMetadataJsonDev(data);
+    }
+
     @UseGuards(AuthGuard)
     @Mutation(() => Boolean, { nullable: true })
     public async deploymentMetadataProd(): Promise<boolean> {

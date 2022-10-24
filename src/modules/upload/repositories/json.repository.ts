@@ -20,6 +20,15 @@ export class UploadJsonRepository {
         return blobClient.getBlockBlobClient(imageName);
     }
 
+    async uploadMetadataJsonDev(data: []): Promise<string> {
+        const filePath = `${await this.configService.get('DIR_LOCAL')}/${this.configService.get('FILE_METADATA_DEV')}`;
+        await fs.writeFileSync(filePath, JSON.stringify(data));
+        const blobkClient = await this.getBlobClient(this.configService.get('FILE_METADATA_DEV'));
+        await blobkClient.uploadFile(filePath);
+        await this.deleteVideo(filePath);
+        return blobkClient.url;
+    }
+
     async deploymentMetadataProd(): Promise<boolean> {
         const fileMetadataDev = this.configService.get('FILE_METADATA_DEV');
         const FilePath = `${this.configService.get('DIR_LOCAL')}/${fileMetadataDev}`;

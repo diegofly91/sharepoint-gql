@@ -18,6 +18,10 @@ export class UploadService {
         return await this.uploadJsonRepository.deploymentMetadataProd();
     }
 
+    async uploadMetadataJsonDev(data: []): Promise<string> {
+        return await this.uploadJsonRepository.uploadMetadataJsonDev(data);
+    }
+
     async uploadMetadataDev(file: any): Promise<string> {
         return await this.uploadJsonRepository.uploadMetadataDev(file);
     }

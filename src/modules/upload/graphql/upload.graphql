@@ -7,5 +7,6 @@ type Query {
 
 type Mutation {
     deploymentMetadataProd: Boolean!
+    uploadMetadataJsonDev(data: [JSONObject]): String!
     uploadMetadataDev(file: JsonFile!): String!
 }
