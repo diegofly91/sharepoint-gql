@@ -31,10 +31,8 @@ export class AuthRepository {
     async getSiteData(token: string, site?: string): Promise<ISite> {
         try {
             const url = site
-                ? `https://graph.microsoft.com/v1.0/sites/${this.configService.get(
-                      'TENANT_NAME',
-                  )}.sharepoint.com:/sites/${site}`
-                : `https://graph.microsoft.com/v1.0/sites/${this.configService.get('TENANT_NAME')}.sharepoint.com`;
+                ? `https://graph.microsoft.com/v1.0/sites/${this.configService.get('TENAT_URL')}:/sites/${site}`
+                : `https://graph.microsoft.com/v1.0/sites/${this.configService.get('TENAT_URL')}`;
 
             const { data } = await this.httpService.axiosRef.get(url, {
                 headers: {

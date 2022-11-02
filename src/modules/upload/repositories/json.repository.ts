@@ -1,21 +1,27 @@
 import * as fs from 'fs-extra';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
+import { BlobServiceClient, BlockBlobClient, StorageSharedKeyCredential } from '@azure/storage-blob';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class UploadJsonRepository {
+    _sharedKeyCredential: StorageSharedKeyCredential;
+    _blobServiceClient: BlobServiceClient;
     constructor(private readonly configService: ConfigService, private readonly httpService: HttpService) {
+        const account: string = this.configService.get('AZURE_STORAGE_ACCOUNT_NAME');
+        const accountKey: string = this.configService.get('AZURE_STORAGE_KEY');
         fs.mkdirsSync(this.configService.get('DIR_LOCAL'), { recursive: true });
+        this._sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
+        this._blobServiceClient = new BlobServiceClient(
+            `https://${account}.blob.core.windows.net`,
+            this._sharedKeyCredential,
+        );
     }
 
     async getBlobClient(imageName: string): Promise<BlockBlobClient> {
         const containerName = this.configService.get('DIR_STORAGE_METADATA');
-        const blobClientService = BlobServiceClient.fromConnectionString(
-            this.configService.get('AZURE_STOTAGE_CONNECTION_STRING'),
-        );
-        const blobClient = blobClientService.getContainerClient(containerName);
+        const blobClient = this._blobServiceClient.getContainerClient(containerName);
         await blobClient.createIfNotExists({ access: 'container' });
         return blobClient.getBlockBlobClient(imageName);
     }

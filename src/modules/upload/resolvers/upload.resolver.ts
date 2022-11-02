@@ -19,6 +19,7 @@ export class UploadResolver {
         return await this.uploadService.getMetadataGlobalDev();
     }
 
+    @UseGuards(AuthGuard)
     @Mutation()
     async uploadMetadataJsonDev(@Args('data') data: []): Promise<string> {
         return await this.uploadService.uploadMetadataJsonDev(data);
