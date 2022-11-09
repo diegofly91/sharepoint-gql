@@ -24,7 +24,7 @@ if (fs.existsSync(crPath) && fs.existsSync(pkPath)) {
     const app = await NestFactory.create(AppModule, options);
     const logger = new Logger('Bootstrap');
     const host = AppModule.host || '127.0.0.1';
-    const port = AppModule.port || 3000;
+    const port = process.env.PORT || 3000;
     app.setGlobalPrefix('api');
     app.enableCors();
     app.useGlobalPipes(
