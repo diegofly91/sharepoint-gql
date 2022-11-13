@@ -15,12 +15,6 @@ steps:
     versionSpec: '16.x'
   displayName: 'Install Node.js'
   
-- task: DownloadBuildArtifacts@1
-  inputs:
-    buildType: 'specific'
-    buildVersionToDownload: 'latest'
-    downloadType: 'specific'
-    downloadPath: '$(System.DefaultWorkingDirectory)'
 - task: ExtractFiles@1
   inputs:
     archiveFilePatterns: '**/*.zip'
