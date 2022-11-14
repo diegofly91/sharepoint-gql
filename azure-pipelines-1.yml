@@ -27,7 +27,7 @@ steps:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
     includeRootFolder: false
 
-- task: PublishBuildArtifacts@1
+- task: PublishPipelineArtifact@0
   inputs:
-     PathtoPublish: '$(Build.ArtifactsDirectory)'
-     ArtifactName: 'drop'
+    targetPath: '$(System.ArtifactsDirectory)'
+    ArtifactName: 'drop'
