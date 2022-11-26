@@ -9,7 +9,26 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  - group: api-list-dev
 steps:
+- task: CmdLine@2
+  inputs:
+    script: | 
+        echo TENANT_ID=$(TENANT_ID) > .env 
+        echo GRAPHQL_DEGUB=$(GRAPHQL_DEGUB) >> .env
+        echo CLIENT_ID=$(CLIENT_ID) >> .env
+        echo CLIENT_SECRET=$(CLIENT_SECRET) >> .env
+        echo TENANT_URL=$(TENANT_URL) >> .env
+        echo SCOPE=$(SCOPE) >> .env
+        echo JWT_SECRET=$(JWT_SECRET) >> .env 
+        echo AZURE_STORAGE_ACCOUNT_NAME=$(AZURE_STORAGE_ACCOUNT_NAME) >> .env
+        echo AZURE_STORAGE_KEY=$(AZURE_STORAGE_KEY) >> .env
+        echo DIR_STORAGE_METADATA=$(DIR_STORAGE_METADATA) >> .env 
+        echo DIR_LOCAL=$(DIR_LOCAL) >> .env
+        echo FILE_METADATA_PROD=$(FILE_METADATA_PROD) >> .env
+        echo FILE_METADATA_DEV=$(FILE_METADATA_DEV) >> .env
+  displayName: 'Setting environment variables'
 - task: NodeTool@0
   inputs:
     versionSpec: '16.x'
@@ -17,14 +36,19 @@ steps:
 
 - script: |
     npm install
-  displayName: 'npm install'
-- script: |
     npm run build
-  displayName: 'npm build'
-  
+  displayName: 'npm install and build'
+- task: CopyFiles@2
+  inputs:
+    Contents: 'package*.json'
+    TargetFolder: 'dist'
+- task: CopyFiles@2
+  inputs:
+    Contents: '.env'
+    TargetFolder: 'dist'      
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist'
     includeRootFolder: false
 
 - task: PublishPipelineArtifact@0
