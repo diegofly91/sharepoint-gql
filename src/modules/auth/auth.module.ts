@@ -4,9 +4,10 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './services';
 import { AuthRepository } from './repositories/auth.repository';
 import { AuthResolver } from './resolvers/auth.resolver';
-import { JwtStrategy, LocalStrategy } from './strategies';
+import { JwtStrategy } from './strategies';
 import { ConfigService } from '@nestjs/config';
 import { ConfigHttp } from '@/config/config.http';
+import jwtConstants from './constans';
 
 @Module({
     imports: [
@@ -14,13 +15,15 @@ import { ConfigHttp } from '@/config/config.http';
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
             inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
-                secret: config.get('JWT_SECRET'),
-                signOptions: { expiresIn: '10d' },
-            }),
+            useFactory: async () => {
+                return {
+                    secret: jwtConstants.secret,
+                    signOptions: { expiresIn: '10d' },
+                };
+            },
         }),
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, AuthResolver, AuthRepository],
+    providers: [AuthService, JwtStrategy, AuthResolver, AuthRepository],
     exports: [PassportModule, JwtModule, AuthService, AuthRepository],
 })
 export class AuthModule {}

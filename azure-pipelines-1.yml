@@ -7,10 +7,10 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 variables:
-  - group: api-list-dev
+  - group:  simple-api
 steps:
 - task: CmdLine@2
   inputs:
@@ -31,13 +31,17 @@ steps:
   displayName: 'Setting environment variables'
 - task: NodeTool@0
   inputs:
-    versionSpec: '16.x'
+    versionSpec: '16.16.0'
   displayName: 'Install Node.js'
-
+- script: |
+    npm install -g @nestjs/cli
+  displayName: 'npm install cli'
 - script: |
     npm install
+  displayName: 'npm install'
+- script: |
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'npm build'
 - task: CopyFiles@2
   inputs:
     Contents: 'package*.json'
@@ -46,12 +50,20 @@ steps:
   inputs:
     Contents: '.env'
     TargetFolder: 'dist'      
+- task: CopyFiles@2
+  inputs:
+    Contents: 'web.config'
+    TargetFolder: 'dist'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'dist'
+    customCommand: 'ci --production'              
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist'
     includeRootFolder: false
-
-- task: PublishPipelineArtifact@0
+- task: PublishBuildArtifacts@1
   inputs:
-    targetPath: '$(System.ArtifactsDirectory)'
-    ArtifactName: 'drop'
+   targetPath: '$(System.ArtifactsDirectory)'
+   ArtifactName: 'drop'    

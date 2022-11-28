@@ -1,24 +1,18 @@
-import { BadRequestException, Logger, ValidationError, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationError, ValidationPipe, Logger } from '@nestjs/common';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
-import { graphqlUploadExpress } from 'graphql-upload-ts';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import * as http from 'http';
 import * as express from 'express';
-
-const configService = new ConfigService();
-// definimos la ruta
-const options: any = {};
+import * as http from 'http';
 
 (async function bootstrap() {
     const server = express();
-    const app = await NestFactory.create(AppModule, options);
+    const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
     const logger = new Logger('Bootstrap');
-   //const host = AppModule.host || '127.0.0.1';
-    const port = process.env.PORT || 3000;
+    const hostname = process.env.HOST || '127.0.0.1';
+    const port = process.env.PORT || 8080;
     app.setGlobalPrefix('api');
-    app.enableCors();
+    app.enableCors({ allowedHeaders: '*', origin: '*' });
     app.useGlobalPipes(
         new ValidationPipe({
             exceptionFactory: (errors: ValidationError[]) => {
@@ -30,9 +24,8 @@ const options: any = {};
             whitelist: true,
         }),
     );
-    app.use(graphqlUploadExpress({ maxFiles: 2, maxFileSize: 100000000 }));
+    //await app.listen(port, () => console.log(`Server started`));
     await app.init();
-    http.createServer(server).listen(port || 443);
-    //await app.listen(port, host);
-    //logger.log(`Server is running in ${await app.getUrl()}/graphql`);
+    http.createServer(server).listen(port);
+   // logger.log(`Server is running in ${await http.get()}/graphql`);
 })();
