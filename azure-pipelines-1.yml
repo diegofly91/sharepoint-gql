@@ -10,7 +10,7 @@ pool:
   vmImage: windows-latest
 
 variables:
-  - group:  simple-api
+  - group:  api-list-dev
 steps:
 - task: CmdLine@2
   inputs:
