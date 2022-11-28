@@ -41,27 +41,10 @@ steps:
   displayName: 'npm install'
 - script: |
     npm run build
-  displayName: 'npm build'
-- task: CopyFiles@2
-  inputs:
-    Contents: 'package*.json'
-    TargetFolder: 'dist'
-- task: CopyFiles@2
-  inputs:
-    Contents: '.env'
-    TargetFolder: 'dist'      
-- task: CopyFiles@2
-  inputs:
-    Contents: 'web.config'
-    TargetFolder: 'dist'
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    workingDir: 'dist'
-    customCommand: 'ci --production'              
+  displayName: 'npm build'              
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist'
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
     includeRootFolder: false
 - task: PublishBuildArtifacts@1
   inputs:
