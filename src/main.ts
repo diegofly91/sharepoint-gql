@@ -27,5 +27,5 @@ import * as http from 'http';
     //await app.listen(port, () => console.log(`Server started`));
     await app.init();
     http.createServer(server).listen(port);
-   // logger.log(`Server is running in ${await http.get()}/graphql`);
+    // logger.log(`Server is running in ${await http.get()}/graphql`);
 })();

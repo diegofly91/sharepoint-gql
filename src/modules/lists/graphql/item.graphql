@@ -5,8 +5,19 @@ type Item {
     fields: JSONObject!
 }
 
+input Filter {
+    column: String!
+    value: String!
+    type: TYPE!
+}
+
+enum TYPE {
+    TEST
+    DATE
+}
+
 scalar JSONObject
 
 type Query {
-    getItemsByListId(listId: String!): [Item]!
+    getItemsByListId(listId: String!, filter: Filter, top: Int): [Item]!
 }

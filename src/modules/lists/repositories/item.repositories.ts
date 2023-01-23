@@ -6,13 +6,20 @@ import { Item } from '../interfaces';
 export class ItemRepository {
     constructor(private readonly httpService: HttpService) {}
 
-    async getItemsByListId(token: string, siteId: string, listId: string): Promise<Item[]> {
+    async getItemsByListId(
+        token: string,
+        siteId: string,
+        listId: string,
+        filter: string,
+        top: number,
+    ): Promise<Item[]> {
         try {
             const { data } = await this.httpService.axiosRef.get(
-                `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/Items?expand=fields`,
+                `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/Items?expand=fields${filter}${top}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
+                        Prefer: 'HonorNonIndexedQueriesWarningMayFailRandomly',
                     },
                 },
             );

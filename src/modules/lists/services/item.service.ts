@@ -6,7 +6,13 @@ import { Item } from '../interfaces';
 export class ItemService {
     constructor(private readonly _ItemRepository: ItemRepository) {}
 
-    async getItemsByListId(token: string, siteId: string, listId: string): Promise<Item[]> {
-        return await this._ItemRepository.getItemsByListId(token, siteId, listId);
+    async getItemsByListId(
+        token: string,
+        siteId: string,
+        listId: string,
+        filter: string,
+        top: number,
+    ): Promise<Item[]> {
+        return await this._ItemRepository.getItemsByListId(token, siteId, listId, filter, top);
     }
 }
