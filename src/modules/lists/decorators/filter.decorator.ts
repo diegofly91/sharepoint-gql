@@ -12,7 +12,8 @@ export const FilterDecorator = createParamDecorator((data: unknown, context: Exe
                 filter.column
             },  '${filter.value}')`;
         } else {
-            return `&$filter=${filter.column} ${Type[filter.type]} '${filter.value.substr(0, 4)}-01'`;
+            return `&$filter=${filter.column} ${Type[filter.type]} '${filter.value.substr(0, 4)}-01' AND  
+                     ${filter.column} le '${Number(filter.value.substr(0, 4)) + 1}-01'`;
         }
     }
     return '';
